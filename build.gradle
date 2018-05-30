@@ -1,0 +1,76 @@
+buildscript {
+    ext.kotlin_version = '1.2.41'
+
+    repositories {
+        jcenter()
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.31"
+    }
+}
+
+group 'de.guggens'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'kotlin2js'
+apply plugin: 'org.jetbrains.kotlin.frontend'
+
+kotlinFrontend {
+    downloadNodeJsVersion = "latest"
+    sourceMaps = true
+    npm {
+        dependency("style-loader")
+        dependency("react")
+        dependency("react-dom")
+        dependency("konva")
+        devDependency("karma")
+    }
+
+    webpackBundle {
+        bundleName = "main"
+        contentPath = file('src/main/web')
+        mode = 'development'
+    }
+}
+
+repositories {
+    maven { url "http://dl.bintray.com/kotlin/kotlinx.html" }
+    maven { url "http://dl.bintray.com/kotlin/kotlin-js-wrappers"}
+}
+
+compileKotlin2Js {
+    kotlinOptions.metaInfo = true
+    kotlinOptions.outputFile = "$project.buildDir.path/js/${project.name}.js"
+    kotlinOptions.sourceMap = true
+    kotlinOptions.sourceMapEmbedSources = "always"
+    // sourceMapPrefix might be an alternative.
+    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.main = "call"
+}
+
+compileTestKotlin2Js {
+    kotlinOptions.metaInfo = true
+    kotlinOptions.outputFile = "$project.buildDir.path/js-tests/${project.name}-tests.js"
+    kotlinOptions.sourceMap = true
+    kotlinOptions.sourceMapEmbedSources = "always"
+    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.main = "call"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.7'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:0.6.10"
+    compile 'org.jetbrains:kotlin-react:16.4.0-pre.31-kotlin-1.2.41'
+    compile 'org.jetbrains:kotlin-react-dom:16.4.0-pre.31-kotlin-1.2.41'
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+}
