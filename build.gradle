@@ -25,6 +25,7 @@ kotlinFrontend {
         dependency("react")
         dependency("react-dom")
         dependency("konva")
+        dependency("react-konva")
         devDependency("karma")
     }
 

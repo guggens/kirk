@@ -8,6 +8,7 @@ import konva.Stage
 import kotlinx.html.id
 import react.*
 import react.dom.div
+import stage
 import kotlin.browser.*
 
 interface CircleProps : RProps {
@@ -51,6 +52,9 @@ class Circle(props: CircleProps) : RComponent<CircleProps, CircleState>(props) {
     override fun RBuilder.render() {
         div() {
             attrs.id = "container"
+            stage() {
+
+            }
         }
 
     }
